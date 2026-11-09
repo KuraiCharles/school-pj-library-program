@@ -1,4 +1,10 @@
 #include <iostream>
+#include <string>
+#include <iomanip>
+
+// Clears the screen. Tries the Windows "cls" command first, then also sends
+// ANSI codes so it still works in terminals where "cls" does nothing.
+#define CLEAR_SCREEN do { system("cls"); std::cout << "\033[2J\033[3J\033[H" << std::flush; } while(0)
 
 int main(){
 
@@ -7,7 +13,15 @@ int main(){
         GENRE_RETURN,
         SUPPLY_OPTION,
         BOOK_CHOICE,
-        ADD_TO_CART_RETURN_CHOICE;
+        ADD_TO_CART_RETURN_CHOICE,
+        SUPPLY_RETURN,
+        SUPPLY_CHOICE,
+        CART_TOTAL = 0,
+        CART_COUNT = 0,
+        CART_RETURN = 0,
+        IS_CHECKOUT = 0,
+        PAYMENT = 0,
+        CHANGE_AMOUNT = 0;
 
     // Price of each book (pesos)
     // Filipino Literature (FL)
@@ -91,6 +105,7 @@ int main(){
     std::string FL_NAME_9 = "Ilustrado";
     // Classic and Literary Fiction (CLF)
     std::string CLF_NAME_1 = "To Kill a Mockingbird";
+
     std::string CLF_NAME_2 = "1984";
     std::string CLF_NAME_3 = "The Great Gatsby";
     std::string CLF_NAME_4 = "Pride and Prejudice";
@@ -114,7 +129,7 @@ int main(){
     std::string CSM_NAME_3 = "Clean Code";
     std::string CSM_NAME_4 = "Introduction to Algorithms";
     std::string CSM_NAME_5 = "Discrete Mathematics and Its Applications";
- 
+
     // Name of each school supply
     // Writing Tools (WT)
     std::string WT_NAME_1 = "Ballpoint Pen (Pack of 5)";
@@ -140,9 +155,9 @@ int main(){
     std::string BDI_NAME_3 = "Ruler (30 cm)";
     std::string BDI_NAME_4 = "Scientific Calculator";
     std::string BDI_NAME_5 = "Stapler with Staples";
-    
-    system("cls");
+
     main_menu:
+    CLEAR_SCREEN;   // clear the screen every time the main menu is shown
 
     std::cout << "▄▄▄▄ ▄▄▄▄ ▄▄▄▄▄ ▄▄▄▄ ▄▄ ▄ ▄ ▄▄  ▄▄▄ ▄▄▄▄      ▄▄   ▄▄ ▄▄▄▄ ▄▄▄▄ ▄▄▄▄ ▄▄▄▄ ▄▄ ▄" << std::endl;
     std::cout << "██ █ ██ █ ██    ██ ▀ ██ █ █ ██ ██▀  ██ ▀      ██   ██ ██ █ ██ █ ██ █ ██ █ ██ █" << std::endl;
@@ -155,26 +170,28 @@ int main(){
     std::cout << std::endl;
     std::cout << std::endl;
 
-    std::cout << " __________________   __________________" << std::endl;
-    std::cout << ".-/|                  \\ /                  |\\-." << std::endl;
-    std::cout << "||||                   |  1. Books Menu    ||||" << std::endl;
-    std::cout << "||||                   |  2. Supply Menu   ||||" << std::endl;
-    std::cout << "||||    MAIN MENU      |  3. View Cart     ||||" << std::endl;
-    std::cout << "||||                   |  4. Checkout      ||||" << std::endl;
-    std::cout << "||||                   |  5. Exit          ||||" << std::endl;
-    std::cout << "||||                   |                   ||||" << std::endl;
-    std::cout << "||||    --==*==--      |     --==*==--     ||||" << std::endl;
-    std::cout << "||||                   |                   ||||" << std::endl;
-    std::cout << "||||                   |                   ||||" << std::endl;
-    std::cout << "||||                   |                   ||||" << std::endl;
-    std::cout << "||||__________________ | __________________||||" << std::endl;
-    std::cout << "||/===================\\|/===================\\||" << std::endl;
-    std::cout << "`--------------------~___~-------------------''" << std::endl;
+    std::cout << " ___________________________________   ___________________________________" << std::endl;
+    std::cout << ".-/|                                   \\ /                                   |\\-." << std::endl;
+    std::cout << "||||                                    |  1. Books Menu                     ||||" << std::endl;
+    std::cout << "||||                                    |  2. Supply Menu                    ||||" << std::endl;
+    std::cout << "||||             MAIN MENU              |  3. View Cart                      ||||" << std::endl;
+    std::cout << "||||                                    |  4. Checkout                       ||||" << std::endl;
+    std::cout << "||||                                    |  5. Exit                           ||||" << std::endl;
+    std::cout << "||||                                    |                                    ||||" << std::endl;
+    std::cout << "||||             --==*==--              |             --==*==--              ||||" << std::endl;
+    std::cout << "||||                                    |                                    ||||" << std::endl;
+    std::cout << "||||                                    |                                    ||||" << std::endl;
+    std::cout << "||||                                    |                                    ||||" << std::endl;
+    std::cout << "||||___________________________________ | ___________________________________||||" << std::endl;
+    std::cout << "||/====================================\\|/====================================\\||" << std::endl;
+    std::cout << "`-------------------------------------~___~------------------------------------''" << std::endl;
 
     std::cout << std::endl;
 
     std::cout << "Enter your option: ";
     std::cin >> OPTION_MENU;
+
+    CLEAR_SCREEN;   // clear the main menu as soon as an option is chosen
 
     switch(OPTION_MENU){
         case 1:
@@ -286,47 +303,49 @@ int main(){
             std::cout << "'-------'   Qty: " << FL_STOCK_9 << "   Price: P" << FL_PRICE_9 << std::endl;
             std::cout << std::endl;
 
-            std::cout << "Press 0 to go back in genre menu: ";
+            std::cout << "Press 0 to go back in genre menu: " << std::endl;
+            std::cout << "Press 1 to add to cart: ";
             std::cin >> GENRE_RETURN;
 
             if(GENRE_RETURN == 0){
                 goto genre_menu;
             }
-
+            else if(GENRE_RETURN == 1){
             std::cout << std::endl;
             std::cout << std::endl;
             std::cout << "Add to cart!" << std::endl;
-            std::cout << "Enter the book number:";
+            std::cout << "Enter the book number: ";
             std::cin >> BOOK_CHOICE;
 
             std::cout << std::endl;
             switch(BOOK_CHOICE){
                 case 1:
-                    redo_quantity_input:
+                    redo_quantity_input_FL_1:
 
                     std::cout << "You picked " << FL_NAME_1 << "!" << std::endl;
-                    
+
                     std::cout << std::endl;
 
                     std::cout << "Enter the quantity: ";
                     std::cin >> FL_BUY_QTY_1;
 
                     if(FL_BUY_QTY_1 > FL_STOCK_1){
-                        system("cls");
+                        CLEAR_SCREEN;
                         std::cout << "Out of Stock!" << std::endl;
                         std::cout << "We have only " << FL_STOCK_1 << " stock left!" << std::endl;
                         std::cout << "Press any key to redo the quantity to buy!";
 
                         system("pause");
 
-                        goto redo_quantity_input;
+                        goto redo_quantity_input_FL_1;
                     }
-                    system("cls");
+                    CLEAR_SCREEN;
                     std::cout << FL_BUY_QTY_1 << " pieces of "<< FL_NAME_1 <<" is added to cart successfully!" << std::endl;
                     system("pause");
-                    system("cls");
+                    CLEAR_SCREEN;
 
-                    std::cout << "Press 1 to go back in main menu or press 2 to go back in genre menu!" << std::endl;
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
                     std::cin >> ADD_TO_CART_RETURN_CHOICE;
 
                     if(ADD_TO_CART_RETURN_CHOICE == 1){
@@ -338,29 +357,307 @@ int main(){
 
                 break;
                 case 2:
+                    redo_quantity_input_FL_2:
+
+                    std::cout << "You picked " << FL_NAME_2 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> FL_BUY_QTY_2;
+
+                    if(FL_BUY_QTY_2 > FL_STOCK_2){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << FL_STOCK_2 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_FL_2;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << FL_BUY_QTY_2 << " pieces of "<< FL_NAME_2 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
 
                 break;
                 case 3:
+                    redo_quantity_input_FL_3:
+
+                    std::cout << "You picked " << FL_NAME_3 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> FL_BUY_QTY_3;
+
+                    if(FL_BUY_QTY_3 > FL_STOCK_3){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << FL_STOCK_3 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_FL_3;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << FL_BUY_QTY_3 << " pieces of "<< FL_NAME_3 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
 
                 break;
                 case 4:
+                    redo_quantity_input_FL_4:
+
+                    std::cout << "You picked " << FL_NAME_4 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> FL_BUY_QTY_4;
+
+                    if(FL_BUY_QTY_4 > FL_STOCK_4){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << FL_STOCK_4 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_FL_4;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << FL_BUY_QTY_4 << " pieces of "<< FL_NAME_4 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
 
                 break;
                 case 5:
+                    redo_quantity_input_FL_5:
+
+                    std::cout << "You picked " << FL_NAME_5 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> FL_BUY_QTY_5;
+
+                    if(FL_BUY_QTY_5 > FL_STOCK_5){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << FL_STOCK_5 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_FL_5;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << FL_BUY_QTY_5 << " pieces of "<< FL_NAME_5 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
 
                 break;
                 case 6:
+                    redo_quantity_input_FL_6:
+
+                    std::cout << "You picked " << FL_NAME_6 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> FL_BUY_QTY_6;
+
+                    if(FL_BUY_QTY_6 > FL_STOCK_6){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << FL_STOCK_6 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_FL_6;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << FL_BUY_QTY_6 << " pieces of "<< FL_NAME_6 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
 
                 break;
                 case 7:
+                    redo_quantity_input_FL_7:
+
+                    std::cout << "You picked " << FL_NAME_7 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> FL_BUY_QTY_7;
+
+                    if(FL_BUY_QTY_7 > FL_STOCK_7){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << FL_STOCK_7 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_FL_7;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << FL_BUY_QTY_7 << " pieces of "<< FL_NAME_7 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
 
                 break;
                 case 8:
+                    redo_quantity_input_FL_8:
+
+                    std::cout << "You picked " << FL_NAME_8 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> FL_BUY_QTY_8;
+
+                    if(FL_BUY_QTY_8 > FL_STOCK_8){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << FL_STOCK_8 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_FL_8;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << FL_BUY_QTY_8 << " pieces of "<< FL_NAME_8 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
 
                 break;
                 case 9:
+                    redo_quantity_input_FL_9:
+
+                    std::cout << "You picked " << FL_NAME_9 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> FL_BUY_QTY_9;
+
+                    if(FL_BUY_QTY_9 > FL_STOCK_9){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << FL_STOCK_9 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_FL_9;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << FL_BUY_QTY_9 << " pieces of "<< FL_NAME_9 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
 
                 break;
+                default:
+                    CLEAR_SCREEN;
+                    std::cout << "Invalid number! Please type one of the numbers shown inside the [ ] brackets (1 to 9)." << std::endl;
+                    system("pause");
+                    goto genre_menu;
+            }
             }
             break;
             case 2:
@@ -409,6 +706,215 @@ int main(){
             std::cout << "|       |   themselves." << std::endl;
             std::cout << "'-------'   Qty: " << CLF_STOCK_5 << "   Price: P" << CLF_PRICE_5 << std::endl;
             std::cout << std::endl;
+
+            std::cout << "Press 0 to go back in genre menu: " << std::endl;
+            std::cout << "Press 1 to add to cart: ";
+            std::cin >> GENRE_RETURN;
+
+            if(GENRE_RETURN == 0){
+                goto genre_menu;
+            }
+            else if(GENRE_RETURN == 1){
+            std::cout << std::endl;
+            std::cout << std::endl;
+            std::cout << "Add to cart!" << std::endl;
+            std::cout << "Enter the book number: ";
+            std::cin >> BOOK_CHOICE;
+
+            std::cout << std::endl;
+            switch(BOOK_CHOICE){
+                case 10:
+                    redo_quantity_input_CLF_1:
+
+                    std::cout << "You picked " << CLF_NAME_1 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> CLF_BUY_QTY_1;
+
+                    if(CLF_BUY_QTY_1 > CLF_STOCK_1){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << CLF_STOCK_1 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_CLF_1;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << CLF_BUY_QTY_1 << " pieces of "<< CLF_NAME_1 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
+
+                break;
+                case 11:
+                    redo_quantity_input_CLF_2:
+
+                    std::cout << "You picked " << CLF_NAME_2 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> CLF_BUY_QTY_2;
+
+                    if(CLF_BUY_QTY_2 > CLF_STOCK_2){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << CLF_STOCK_2 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_CLF_2;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << CLF_BUY_QTY_2 << " pieces of "<< CLF_NAME_2 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
+
+                break;
+                case 12:
+                    redo_quantity_input_CLF_3:
+
+                    std::cout << "You picked " << CLF_NAME_3 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> CLF_BUY_QTY_3;
+
+                    if(CLF_BUY_QTY_3 > CLF_STOCK_3){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << CLF_STOCK_3 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_CLF_3;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << CLF_BUY_QTY_3 << " pieces of "<< CLF_NAME_3 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
+
+                break;
+                case 13:
+                    redo_quantity_input_CLF_4:
+
+                    std::cout << "You picked " << CLF_NAME_4 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> CLF_BUY_QTY_4;
+
+                    if(CLF_BUY_QTY_4 > CLF_STOCK_4){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << CLF_STOCK_4 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_CLF_4;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << CLF_BUY_QTY_4 << " pieces of "<< CLF_NAME_4 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
+
+                break;
+                case 14:
+                    redo_quantity_input_CLF_5:
+
+                    std::cout << "You picked " << CLF_NAME_5 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> CLF_BUY_QTY_5;
+
+                    if(CLF_BUY_QTY_5 > CLF_STOCK_5){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << CLF_STOCK_5 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_CLF_5;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << CLF_BUY_QTY_5 << " pieces of "<< CLF_NAME_5 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
+
+                break;
+                default:
+                    CLEAR_SCREEN;
+                    std::cout << "Invalid number! Please type one of the numbers shown inside the [ ] brackets (10 to 14)." << std::endl;
+                    system("pause");
+                    goto genre_menu;
+            }
+            }
             break;
             case 3:
             std::cout << "--- FANTASY, ADVENTURE AND MYSTERY ---" << std::endl;
@@ -464,6 +970,252 @@ int main(){
             std::cout << "|       |   in this crime novel." << std::endl;
             std::cout << "'-------'   Qty: " << FAM_STOCK_6 << "   Price: P" << FAM_PRICE_6 << std::endl;
             std::cout << std::endl;
+
+            std::cout << "Press 0 to go back in genre menu: " << std::endl;
+            std::cout << "Press 1 to add to cart: ";
+            std::cin >> GENRE_RETURN;
+
+            if(GENRE_RETURN == 0){
+                goto genre_menu;
+            }
+            else if(GENRE_RETURN == 1){
+            std::cout << std::endl;
+            std::cout << std::endl;
+            std::cout << "Add to cart!" << std::endl;
+            std::cout << "Enter the book number: ";
+            std::cin >> BOOK_CHOICE;
+
+            std::cout << std::endl;
+            switch(BOOK_CHOICE){
+                case 15:
+                    redo_quantity_input_FAM_1:
+
+                    std::cout << "You picked " << FAM_NAME_1 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> FAM_BUY_QTY_1;
+
+                    if(FAM_BUY_QTY_1 > FAM_STOCK_1){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << FAM_STOCK_1 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_FAM_1;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << FAM_BUY_QTY_1 << " pieces of "<< FAM_NAME_1 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
+
+                break;
+                case 16:
+                    redo_quantity_input_FAM_2:
+
+                    std::cout << "You picked " << FAM_NAME_2 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> FAM_BUY_QTY_2;
+
+                    if(FAM_BUY_QTY_2 > FAM_STOCK_2){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << FAM_STOCK_2 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_FAM_2;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << FAM_BUY_QTY_2 << " pieces of "<< FAM_NAME_2 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
+
+                break;
+                case 17:
+                    redo_quantity_input_FAM_3:
+
+                    std::cout << "You picked " << FAM_NAME_3 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> FAM_BUY_QTY_3;
+
+                    if(FAM_BUY_QTY_3 > FAM_STOCK_3){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << FAM_STOCK_3 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_FAM_3;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << FAM_BUY_QTY_3 << " pieces of "<< FAM_NAME_3 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
+
+                break;
+                case 18:
+                    redo_quantity_input_FAM_4:
+
+                    std::cout << "You picked " << FAM_NAME_4 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> FAM_BUY_QTY_4;
+
+                    if(FAM_BUY_QTY_4 > FAM_STOCK_4){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << FAM_STOCK_4 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_FAM_4;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << FAM_BUY_QTY_4 << " pieces of "<< FAM_NAME_4 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
+
+                break;
+                case 19:
+                    redo_quantity_input_FAM_5:
+
+                    std::cout << "You picked " << FAM_NAME_5 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> FAM_BUY_QTY_5;
+
+                    if(FAM_BUY_QTY_5 > FAM_STOCK_5){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << FAM_STOCK_5 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_FAM_5;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << FAM_BUY_QTY_5 << " pieces of "<< FAM_NAME_5 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
+
+                break;
+                case 20:
+                    redo_quantity_input_FAM_6:
+
+                    std::cout << "You picked " << FAM_NAME_6 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> FAM_BUY_QTY_6;
+
+                    if(FAM_BUY_QTY_6 > FAM_STOCK_6){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << FAM_STOCK_6 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_FAM_6;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << FAM_BUY_QTY_6 << " pieces of "<< FAM_NAME_6 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
+
+                break;
+                default:
+                    CLEAR_SCREEN;
+                    std::cout << "Invalid number! Please type one of the numbers shown inside the [ ] brackets (15 to 20)." << std::endl;
+                    system("pause");
+                    goto genre_menu;
+            }
+            }
             break;
             case 4:
             std::cout << "--- SELF-HELP AND BUSINESS ---" << std::endl;
@@ -511,6 +1263,215 @@ int main(){
             std::cout << "|       |   a positive mindset." << std::endl;
             std::cout << "'-------'   Qty: " << SHB_STOCK_5 << "   Price: P" << SHB_PRICE_5 << std::endl;
             std::cout << std::endl;
+
+            std::cout << "Press 0 to go back in genre menu: " << std::endl;
+            std::cout << "Press 1 to add to cart: ";
+            std::cin >> GENRE_RETURN;
+
+            if(GENRE_RETURN == 0){
+                goto genre_menu;
+            }
+            else if(GENRE_RETURN == 1){
+            std::cout << std::endl;
+            std::cout << std::endl;
+            std::cout << "Add to cart!" << std::endl;
+            std::cout << "Enter the book number: ";
+            std::cin >> BOOK_CHOICE;
+
+            std::cout << std::endl;
+            switch(BOOK_CHOICE){
+                case 21:
+                    redo_quantity_input_SHB_1:
+
+                    std::cout << "You picked " << SHB_NAME_1 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> SHB_BUY_QTY_1;
+
+                    if(SHB_BUY_QTY_1 > SHB_STOCK_1){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << SHB_STOCK_1 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_SHB_1;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << SHB_BUY_QTY_1 << " pieces of "<< SHB_NAME_1 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
+
+                break;
+                case 22:
+                    redo_quantity_input_SHB_2:
+
+                    std::cout << "You picked " << SHB_NAME_2 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> SHB_BUY_QTY_2;
+
+                    if(SHB_BUY_QTY_2 > SHB_STOCK_2){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << SHB_STOCK_2 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_SHB_2;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << SHB_BUY_QTY_2 << " pieces of "<< SHB_NAME_2 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
+
+                break;
+                case 23:
+                    redo_quantity_input_SHB_3:
+
+                    std::cout << "You picked " << SHB_NAME_3 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> SHB_BUY_QTY_3;
+
+                    if(SHB_BUY_QTY_3 > SHB_STOCK_3){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << SHB_STOCK_3 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_SHB_3;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << SHB_BUY_QTY_3 << " pieces of "<< SHB_NAME_3 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
+
+                break;
+                case 24:
+                    redo_quantity_input_SHB_4:
+
+                    std::cout << "You picked " << SHB_NAME_4 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> SHB_BUY_QTY_4;
+
+                    if(SHB_BUY_QTY_4 > SHB_STOCK_4){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << SHB_STOCK_4 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_SHB_4;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << SHB_BUY_QTY_4 << " pieces of "<< SHB_NAME_4 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
+
+                break;
+                case 25:
+                    redo_quantity_input_SHB_5:
+
+                    std::cout << "You picked " << SHB_NAME_5 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> SHB_BUY_QTY_5;
+
+                    if(SHB_BUY_QTY_5 > SHB_STOCK_5){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << SHB_STOCK_5 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_SHB_5;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << SHB_BUY_QTY_5 << " pieces of "<< SHB_NAME_5 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
+
+                break;
+                default:
+                    CLEAR_SCREEN;
+                    std::cout << "Invalid number! Please type one of the numbers shown inside the [ ] brackets (21 to 25)." << std::endl;
+                    system("pause");
+                    goto genre_menu;
+            }
+            }
             break;
             case 5:
             std::cout << "--- COMPUTER SCIENCE AND MATH ---" << std::endl;
@@ -558,12 +1519,222 @@ int main(){
             std::cout << "|       |   science students." << std::endl;
             std::cout << "'-------'   Qty: " << CSM_STOCK_5 << "   Price: P" << CSM_PRICE_5 << std::endl;
             std::cout << std::endl;
+
+            std::cout << "Press 0 to go back in genre menu: " << std::endl;
+            std::cout << "Press 1 to add to cart: ";
+            std::cin >> GENRE_RETURN;
+
+            if(GENRE_RETURN == 0){
+                goto genre_menu;
+            }
+            else if(GENRE_RETURN == 1){
+            std::cout << std::endl;
+            std::cout << std::endl;
+            std::cout << "Add to cart!" << std::endl;
+            std::cout << "Enter the book number: ";
+            std::cin >> BOOK_CHOICE;
+
+            std::cout << std::endl;
+            switch(BOOK_CHOICE){
+                case 26:
+                    redo_quantity_input_CSM_1:
+
+                    std::cout << "You picked " << CSM_NAME_1 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> CSM_BUY_QTY_1;
+
+                    if(CSM_BUY_QTY_1 > CSM_STOCK_1){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << CSM_STOCK_1 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_CSM_1;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << CSM_BUY_QTY_1 << " pieces of "<< CSM_NAME_1 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
+
+                break;
+                case 27:
+                    redo_quantity_input_CSM_2:
+
+                    std::cout << "You picked " << CSM_NAME_2 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> CSM_BUY_QTY_2;
+
+                    if(CSM_BUY_QTY_2 > CSM_STOCK_2){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << CSM_STOCK_2 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_CSM_2;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << CSM_BUY_QTY_2 << " pieces of "<< CSM_NAME_2 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
+
+                break;
+                case 28:
+                    redo_quantity_input_CSM_3:
+
+                    std::cout << "You picked " << CSM_NAME_3 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> CSM_BUY_QTY_3;
+
+                    if(CSM_BUY_QTY_3 > CSM_STOCK_3){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << CSM_STOCK_3 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_CSM_3;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << CSM_BUY_QTY_3 << " pieces of "<< CSM_NAME_3 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
+
+                break;
+                case 29:
+                    redo_quantity_input_CSM_4:
+
+                    std::cout << "You picked " << CSM_NAME_4 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> CSM_BUY_QTY_4;
+
+                    if(CSM_BUY_QTY_4 > CSM_STOCK_4){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << CSM_STOCK_4 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_CSM_4;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << CSM_BUY_QTY_4 << " pieces of "<< CSM_NAME_4 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
+
+                break;
+                case 30:
+                    redo_quantity_input_CSM_5:
+
+                    std::cout << "You picked " << CSM_NAME_5 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> CSM_BUY_QTY_5;
+
+                    if(CSM_BUY_QTY_5 > CSM_STOCK_5){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << CSM_STOCK_5 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_CSM_5;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << CSM_BUY_QTY_5 << " pieces of "<< CSM_NAME_5 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for genre menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
+
+                break;
+                default:
+                    CLEAR_SCREEN;
+                    std::cout << "Invalid number! Please type one of the numbers shown inside the [ ] brackets (26 to 30)." << std::endl;
+                    system("pause");
+                    goto genre_menu;
+            }
+            }
             break;
             default:
             break;
             }
         break;
         case 2:
+            supply_menu:
 
             std::cout << std::endl;
 
@@ -638,6 +1809,215 @@ int main(){
             std::cout << "|       |   neat and ready." << std::endl;
             std::cout << "'-------'   Qty: " << WT_STOCK_5 << "   Price: P" << WT_PRICE_5 << std::endl;
             std::cout << std::endl;
+
+            std::cout << "Press 0 to go back in supply menu: " << std::endl;
+            std::cout << "Press 1 to add to cart: ";
+            std::cin >> SUPPLY_RETURN;
+
+            if(SUPPLY_RETURN == 0){
+                goto supply_menu;
+            }
+            else if(SUPPLY_RETURN == 1){
+            std::cout << std::endl;
+            std::cout << std::endl;
+            std::cout << "Add to cart!" << std::endl;
+            std::cout << "Enter the item number: ";
+            std::cin >> SUPPLY_CHOICE;
+
+            std::cout << std::endl;
+            switch(SUPPLY_CHOICE){
+                case 31:
+                    redo_quantity_input_WT_1:
+
+                    std::cout << "You picked " << WT_NAME_1 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> WT_BUY_QTY_1;
+
+                    if(WT_BUY_QTY_1 > WT_STOCK_1){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << WT_STOCK_1 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_WT_1;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << WT_BUY_QTY_1 << " pieces of "<< WT_NAME_1 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for supply menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto supply_menu;
+                    }
+
+                break;
+                case 32:
+                    redo_quantity_input_WT_2:
+
+                    std::cout << "You picked " << WT_NAME_2 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> WT_BUY_QTY_2;
+
+                    if(WT_BUY_QTY_2 > WT_STOCK_2){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << WT_STOCK_2 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_WT_2;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << WT_BUY_QTY_2 << " pieces of "<< WT_NAME_2 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for supply menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto supply_menu;
+                    }
+
+                break;
+                case 33:
+                    redo_quantity_input_WT_3:
+
+                    std::cout << "You picked " << WT_NAME_3 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> WT_BUY_QTY_3;
+
+                    if(WT_BUY_QTY_3 > WT_STOCK_3){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << WT_STOCK_3 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_WT_3;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << WT_BUY_QTY_3 << " pieces of "<< WT_NAME_3 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for supply menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto supply_menu;
+                    }
+
+                break;
+                case 34:
+                    redo_quantity_input_WT_4:
+
+                    std::cout << "You picked " << WT_NAME_4 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> WT_BUY_QTY_4;
+
+                    if(WT_BUY_QTY_4 > WT_STOCK_4){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << WT_STOCK_4 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_WT_4;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << WT_BUY_QTY_4 << " pieces of "<< WT_NAME_4 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for supply menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto supply_menu;
+                    }
+
+                break;
+                case 35:
+                    redo_quantity_input_WT_5:
+
+                    std::cout << "You picked " << WT_NAME_5 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> WT_BUY_QTY_5;
+
+                    if(WT_BUY_QTY_5 > WT_STOCK_5){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << WT_STOCK_5 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_WT_5;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << WT_BUY_QTY_5 << " pieces of "<< WT_NAME_5 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for supply menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto supply_menu;
+                    }
+
+                break;
+                default:
+                    CLEAR_SCREEN;
+                    std::cout << "Invalid number! Please type one of the numbers shown inside the [ ] brackets (31 to 35)." << std::endl;
+                    system("pause");
+                    goto supply_menu;
+            }
+            }
             break;
             case 2:
             std::cout << "--- PAPER AND NOTEBOOKS ---" << std::endl;
@@ -685,6 +2065,215 @@ int main(){
             std::cout << "|       |   you do not want to forget." << std::endl;
             std::cout << "'-------'   Qty: " << PN_STOCK_5 << "   Price: P" << PN_PRICE_5 << std::endl;
             std::cout << std::endl;
+
+            std::cout << "Press 0 to go back in supply menu: " << std::endl;
+            std::cout << "Press 1 to add to cart: ";
+            std::cin >> SUPPLY_RETURN;
+
+            if(SUPPLY_RETURN == 0){
+                goto supply_menu;
+            }
+            else if(SUPPLY_RETURN == 1){
+            std::cout << std::endl;
+            std::cout << std::endl;
+            std::cout << "Add to cart!" << std::endl;
+            std::cout << "Enter the item number: ";
+            std::cin >> SUPPLY_CHOICE;
+
+            std::cout << std::endl;
+            switch(SUPPLY_CHOICE){
+                case 36:
+                    redo_quantity_input_PN_1:
+
+                    std::cout << "You picked " << PN_NAME_1 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> PN_BUY_QTY_1;
+
+                    if(PN_BUY_QTY_1 > PN_STOCK_1){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << PN_STOCK_1 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_PN_1;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << PN_BUY_QTY_1 << " pieces of "<< PN_NAME_1 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for supply menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto supply_menu;
+                    }
+
+                break;
+                case 37:
+                    redo_quantity_input_PN_2:
+
+                    std::cout << "You picked " << PN_NAME_2 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> PN_BUY_QTY_2;
+
+                    if(PN_BUY_QTY_2 > PN_STOCK_2){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << PN_STOCK_2 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_PN_2;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << PN_BUY_QTY_2 << " pieces of "<< PN_NAME_2 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for supply menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto supply_menu;
+                    }
+
+                break;
+                case 38:
+                    redo_quantity_input_PN_3:
+
+                    std::cout << "You picked " << PN_NAME_3 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> PN_BUY_QTY_3;
+
+                    if(PN_BUY_QTY_3 > PN_STOCK_3){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << PN_STOCK_3 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_PN_3;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << PN_BUY_QTY_3 << " pieces of "<< PN_NAME_3 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for supply menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto supply_menu;
+                    }
+
+                break;
+                case 39:
+                    redo_quantity_input_PN_4:
+
+                    std::cout << "You picked " << PN_NAME_4 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> PN_BUY_QTY_4;
+
+                    if(PN_BUY_QTY_4 > PN_STOCK_4){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << PN_STOCK_4 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_PN_4;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << PN_BUY_QTY_4 << " pieces of "<< PN_NAME_4 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for supply menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto supply_menu;
+                    }
+
+                break;
+                case 40:
+                    redo_quantity_input_PN_5:
+
+                    std::cout << "You picked " << PN_NAME_5 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> PN_BUY_QTY_5;
+
+                    if(PN_BUY_QTY_5 > PN_STOCK_5){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << PN_STOCK_5 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_PN_5;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << PN_BUY_QTY_5 << " pieces of "<< PN_NAME_5 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for supply menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto supply_menu;
+                    }
+
+                break;
+                default:
+                    CLEAR_SCREEN;
+                    std::cout << "Invalid number! Please type one of the numbers shown inside the [ ] brackets (36 to 40)." << std::endl;
+                    system("pause");
+                    goto supply_menu;
+            }
+            }
             break;
             case 3:
             std::cout << "--- ART AND CRAFT ---" << std::endl;
@@ -732,6 +2321,215 @@ int main(){
             std::cout << "|       |   school projects." << std::endl;
             std::cout << "'-------'   Qty: " << AC_STOCK_5 << "   Price: P" << AC_PRICE_5 << std::endl;
             std::cout << std::endl;
+
+            std::cout << "Press 0 to go back in supply menu: " << std::endl;
+            std::cout << "Press 1 to add to cart: ";
+            std::cin >> SUPPLY_RETURN;
+
+            if(SUPPLY_RETURN == 0){
+                goto supply_menu;
+            }
+            else if(SUPPLY_RETURN == 1){
+            std::cout << std::endl;
+            std::cout << std::endl;
+            std::cout << "Add to cart!" << std::endl;
+            std::cout << "Enter the item number: ";
+            std::cin >> SUPPLY_CHOICE;
+
+            std::cout << std::endl;
+            switch(SUPPLY_CHOICE){
+                case 41:
+                    redo_quantity_input_AC_1:
+
+                    std::cout << "You picked " << AC_NAME_1 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> AC_BUY_QTY_1;
+
+                    if(AC_BUY_QTY_1 > AC_STOCK_1){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << AC_STOCK_1 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_AC_1;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << AC_BUY_QTY_1 << " pieces of "<< AC_NAME_1 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for supply menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto supply_menu;
+                    }
+
+                break;
+                case 42:
+                    redo_quantity_input_AC_2:
+
+                    std::cout << "You picked " << AC_NAME_2 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> AC_BUY_QTY_2;
+
+                    if(AC_BUY_QTY_2 > AC_STOCK_2){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << AC_STOCK_2 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_AC_2;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << AC_BUY_QTY_2 << " pieces of "<< AC_NAME_2 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for supply menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto supply_menu;
+                    }
+
+                break;
+                case 43:
+                    redo_quantity_input_AC_3:
+
+                    std::cout << "You picked " << AC_NAME_3 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> AC_BUY_QTY_3;
+
+                    if(AC_BUY_QTY_3 > AC_STOCK_3){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << AC_STOCK_3 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_AC_3;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << AC_BUY_QTY_3 << " pieces of "<< AC_NAME_3 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for supply menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto supply_menu;
+                    }
+
+                break;
+                case 44:
+                    redo_quantity_input_AC_4:
+
+                    std::cout << "You picked " << AC_NAME_4 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> AC_BUY_QTY_4;
+
+                    if(AC_BUY_QTY_4 > AC_STOCK_4){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << AC_STOCK_4 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_AC_4;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << AC_BUY_QTY_4 << " pieces of "<< AC_NAME_4 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for supply menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto supply_menu;
+                    }
+
+                break;
+                case 45:
+                    redo_quantity_input_AC_5:
+
+                    std::cout << "You picked " << AC_NAME_5 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> AC_BUY_QTY_5;
+
+                    if(AC_BUY_QTY_5 > AC_STOCK_5){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << AC_STOCK_5 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_AC_5;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << AC_BUY_QTY_5 << " pieces of "<< AC_NAME_5 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for supply menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto supply_menu;
+                    }
+
+                break;
+                default:
+                    CLEAR_SCREEN;
+                    std::cout << "Invalid number! Please type one of the numbers shown inside the [ ] brackets (41 to 45)." << std::endl;
+                    system("pause");
+                    goto supply_menu;
+            }
+            }
             break;
             case 4:
             std::cout << "--- BAGS AND DESK ITEMS ---" << std::endl;
@@ -779,22 +2577,705 @@ int main(){
             std::cout << "|       |   and homework." << std::endl;
             std::cout << "'-------'   Qty: " << BDI_STOCK_5 << "   Price: P" << BDI_PRICE_5 << std::endl;
             std::cout << std::endl;
+
+            std::cout << "Press 0 to go back in supply menu: " << std::endl;
+            std::cout << "Press 1 to add to cart: ";
+            std::cin >> SUPPLY_RETURN;
+
+            if(SUPPLY_RETURN == 0){
+                goto supply_menu;
+            }
+            else if(SUPPLY_RETURN == 1){
+            std::cout << std::endl;
+            std::cout << std::endl;
+            std::cout << "Add to cart!" << std::endl;
+            std::cout << "Enter the item number: ";
+            std::cin >> SUPPLY_CHOICE;
+
+            std::cout << std::endl;
+            switch(SUPPLY_CHOICE){
+                case 46:
+                    redo_quantity_input_BDI_1:
+
+                    std::cout << "You picked " << BDI_NAME_1 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> BDI_BUY_QTY_1;
+
+                    if(BDI_BUY_QTY_1 > BDI_STOCK_1){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << BDI_STOCK_1 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_BDI_1;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << BDI_BUY_QTY_1 << " pieces of "<< BDI_NAME_1 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for supply menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto supply_menu;
+                    }
+
+                break;
+                case 47:
+                    redo_quantity_input_BDI_2:
+
+                    std::cout << "You picked " << BDI_NAME_2 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> BDI_BUY_QTY_2;
+
+                    if(BDI_BUY_QTY_2 > BDI_STOCK_2){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << BDI_STOCK_2 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_BDI_2;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << BDI_BUY_QTY_2 << " pieces of "<< BDI_NAME_2 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for supply menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto supply_menu;
+                    }
+
+                break;
+                case 48:
+                    redo_quantity_input_BDI_3:
+
+                    std::cout << "You picked " << BDI_NAME_3 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> BDI_BUY_QTY_3;
+
+                    if(BDI_BUY_QTY_3 > BDI_STOCK_3){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << BDI_STOCK_3 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_BDI_3;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << BDI_BUY_QTY_3 << " pieces of "<< BDI_NAME_3 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for supply menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto supply_menu;
+                    }
+
+                break;
+                case 49:
+                    redo_quantity_input_BDI_4:
+
+                    std::cout << "You picked " << BDI_NAME_4 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> BDI_BUY_QTY_4;
+
+                    if(BDI_BUY_QTY_4 > BDI_STOCK_4){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << BDI_STOCK_4 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_BDI_4;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << BDI_BUY_QTY_4 << " pieces of "<< BDI_NAME_4 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for supply menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto supply_menu;
+                    }
+
+                break;
+                case 50:
+                    redo_quantity_input_BDI_5:
+
+                    std::cout << "You picked " << BDI_NAME_5 << "!" << std::endl;
+
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> BDI_BUY_QTY_5;
+
+                    if(BDI_BUY_QTY_5 > BDI_STOCK_5){
+                        CLEAR_SCREEN;
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << BDI_STOCK_5 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input_BDI_5;
+                    }
+                    CLEAR_SCREEN;
+                    std::cout << BDI_BUY_QTY_5 << " pieces of "<< BDI_NAME_5 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    CLEAR_SCREEN;
+
+                    std::cout << "Press 1 for main menu: " << std::endl;
+                    std::cout << "Press 2 for supply menu: ";
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto supply_menu;
+                    }
+
+                break;
+                default:
+                    CLEAR_SCREEN;
+                    std::cout << "Invalid number! Please type one of the numbers shown inside the [ ] brackets (46 to 50)." << std::endl;
+                    system("pause");
+                    goto supply_menu;
+            }
+            }
             break;
             default:
             break;
             }
         break;
         case 3:
+        IS_CHECKOUT = 0;
+        view_cart:
 
+        CART_TOTAL = 0;
+        CART_COUNT = 0;
+
+        CLEAR_SCREEN;
+        std::cout << "============================================================================================" << std::endl;
+        std::cout << "                                           CART" << std::endl;
+        std::cout << "============================================================================================" << std::endl;
+        std::cout << std::left << std::setw(44) << "ITEM NAME" << std::setw(16) << "ITEM QUANTITY"
+                  << std::setw(14) << "ITEM PRICE" << "ITEM TOTAL PRICE" << std::endl;
+        std::cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << std::endl;
+
+        if(FL_BUY_QTY_1 > 0){
+            std::cout << std::left << std::setw(44) << FL_NAME_1 << std::setw(16) << FL_BUY_QTY_1
+                      << std::setw(14) << ("P" + std::to_string(FL_PRICE_1))
+                      << "P" << FL_BUY_QTY_1 * FL_PRICE_1 << std::endl;
+            CART_TOTAL += FL_BUY_QTY_1 * FL_PRICE_1;
+            CART_COUNT++;
+        }
+        if(FL_BUY_QTY_2 > 0){
+            std::cout << std::left << std::setw(44) << FL_NAME_2 << std::setw(16) << FL_BUY_QTY_2
+                      << std::setw(14) << ("P" + std::to_string(FL_PRICE_2))
+                      << "P" << FL_BUY_QTY_2 * FL_PRICE_2 << std::endl;
+            CART_TOTAL += FL_BUY_QTY_2 * FL_PRICE_2;
+            CART_COUNT++;
+        }
+        if(FL_BUY_QTY_3 > 0){
+            std::cout << std::left << std::setw(44) << FL_NAME_3 << std::setw(16) << FL_BUY_QTY_3
+                      << std::setw(14) << ("P" + std::to_string(FL_PRICE_3))
+                      << "P" << FL_BUY_QTY_3 * FL_PRICE_3 << std::endl;
+            CART_TOTAL += FL_BUY_QTY_3 * FL_PRICE_3;
+            CART_COUNT++;
+        }
+        if(FL_BUY_QTY_4 > 0){
+            std::cout << std::left << std::setw(44) << FL_NAME_4 << std::setw(16) << FL_BUY_QTY_4
+                      << std::setw(14) << ("P" + std::to_string(FL_PRICE_4))
+                      << "P" << FL_BUY_QTY_4 * FL_PRICE_4 << std::endl;
+            CART_TOTAL += FL_BUY_QTY_4 * FL_PRICE_4;
+            CART_COUNT++;
+        }
+        if(FL_BUY_QTY_5 > 0){
+            std::cout << std::left << std::setw(44) << FL_NAME_5 << std::setw(16) << FL_BUY_QTY_5
+                      << std::setw(14) << ("P" + std::to_string(FL_PRICE_5))
+                      << "P" << FL_BUY_QTY_5 * FL_PRICE_5 << std::endl;
+            CART_TOTAL += FL_BUY_QTY_5 * FL_PRICE_5;
+            CART_COUNT++;
+        }
+        if(FL_BUY_QTY_6 > 0){
+            std::cout << std::left << std::setw(44) << FL_NAME_6 << std::setw(16) << FL_BUY_QTY_6
+                      << std::setw(14) << ("P" + std::to_string(FL_PRICE_6))
+                      << "P" << FL_BUY_QTY_6 * FL_PRICE_6 << std::endl;
+            CART_TOTAL += FL_BUY_QTY_6 * FL_PRICE_6;
+            CART_COUNT++;
+        }
+        if(FL_BUY_QTY_7 > 0){
+            std::cout << std::left << std::setw(44) << FL_NAME_7 << std::setw(16) << FL_BUY_QTY_7
+                      << std::setw(14) << ("P" + std::to_string(FL_PRICE_7))
+                      << "P" << FL_BUY_QTY_7 * FL_PRICE_7 << std::endl;
+            CART_TOTAL += FL_BUY_QTY_7 * FL_PRICE_7;
+            CART_COUNT++;
+        }
+        if(FL_BUY_QTY_8 > 0){
+            std::cout << std::left << std::setw(44) << FL_NAME_8 << std::setw(16) << FL_BUY_QTY_8
+                      << std::setw(14) << ("P" + std::to_string(FL_PRICE_8))
+                      << "P" << FL_BUY_QTY_8 * FL_PRICE_8 << std::endl;
+            CART_TOTAL += FL_BUY_QTY_8 * FL_PRICE_8;
+            CART_COUNT++;
+        }
+        if(FL_BUY_QTY_9 > 0){
+            std::cout << std::left << std::setw(44) << FL_NAME_9 << std::setw(16) << FL_BUY_QTY_9
+                      << std::setw(14) << ("P" + std::to_string(FL_PRICE_9))
+                      << "P" << FL_BUY_QTY_9 * FL_PRICE_9 << std::endl;
+            CART_TOTAL += FL_BUY_QTY_9 * FL_PRICE_9;
+            CART_COUNT++;
+        }
+        if(CLF_BUY_QTY_1 > 0){
+            std::cout << std::left << std::setw(44) << CLF_NAME_1 << std::setw(16) << CLF_BUY_QTY_1
+                      << std::setw(14) << ("P" + std::to_string(CLF_PRICE_1))
+                      << "P" << CLF_BUY_QTY_1 * CLF_PRICE_1 << std::endl;
+            CART_TOTAL += CLF_BUY_QTY_1 * CLF_PRICE_1;
+            CART_COUNT++;
+        }
+        if(CLF_BUY_QTY_2 > 0){
+            std::cout << std::left << std::setw(44) << CLF_NAME_2 << std::setw(16) << CLF_BUY_QTY_2
+                      << std::setw(14) << ("P" + std::to_string(CLF_PRICE_2))
+                      << "P" << CLF_BUY_QTY_2 * CLF_PRICE_2 << std::endl;
+            CART_TOTAL += CLF_BUY_QTY_2 * CLF_PRICE_2;
+            CART_COUNT++;
+        }
+        if(CLF_BUY_QTY_3 > 0){
+            std::cout << std::left << std::setw(44) << CLF_NAME_3 << std::setw(16) << CLF_BUY_QTY_3
+                      << std::setw(14) << ("P" + std::to_string(CLF_PRICE_3))
+                      << "P" << CLF_BUY_QTY_3 * CLF_PRICE_3 << std::endl;
+            CART_TOTAL += CLF_BUY_QTY_3 * CLF_PRICE_3;
+            CART_COUNT++;
+        }
+        if(CLF_BUY_QTY_4 > 0){
+            std::cout << std::left << std::setw(44) << CLF_NAME_4 << std::setw(16) << CLF_BUY_QTY_4
+                      << std::setw(14) << ("P" + std::to_string(CLF_PRICE_4))
+                      << "P" << CLF_BUY_QTY_4 * CLF_PRICE_4 << std::endl;
+            CART_TOTAL += CLF_BUY_QTY_4 * CLF_PRICE_4;
+            CART_COUNT++;
+        }
+        if(CLF_BUY_QTY_5 > 0){
+            std::cout << std::left << std::setw(44) << CLF_NAME_5 << std::setw(16) << CLF_BUY_QTY_5
+                      << std::setw(14) << ("P" + std::to_string(CLF_PRICE_5))
+                      << "P" << CLF_BUY_QTY_5 * CLF_PRICE_5 << std::endl;
+            CART_TOTAL += CLF_BUY_QTY_5 * CLF_PRICE_5;
+            CART_COUNT++;
+        }
+        if(FAM_BUY_QTY_1 > 0){
+            std::cout << std::left << std::setw(44) << FAM_NAME_1 << std::setw(16) << FAM_BUY_QTY_1
+                      << std::setw(14) << ("P" + std::to_string(FAM_PRICE_1))
+                      << "P" << FAM_BUY_QTY_1 * FAM_PRICE_1 << std::endl;
+            CART_TOTAL += FAM_BUY_QTY_1 * FAM_PRICE_1;
+            CART_COUNT++;
+        }
+        if(FAM_BUY_QTY_2 > 0){
+            std::cout << std::left << std::setw(44) << FAM_NAME_2 << std::setw(16) << FAM_BUY_QTY_2
+                      << std::setw(14) << ("P" + std::to_string(FAM_PRICE_2))
+                      << "P" << FAM_BUY_QTY_2 * FAM_PRICE_2 << std::endl;
+            CART_TOTAL += FAM_BUY_QTY_2 * FAM_PRICE_2;
+            CART_COUNT++;
+        }
+        if(FAM_BUY_QTY_3 > 0){
+            std::cout << std::left << std::setw(44) << FAM_NAME_3 << std::setw(16) << FAM_BUY_QTY_3
+                      << std::setw(14) << ("P" + std::to_string(FAM_PRICE_3))
+                      << "P" << FAM_BUY_QTY_3 * FAM_PRICE_3 << std::endl;
+            CART_TOTAL += FAM_BUY_QTY_3 * FAM_PRICE_3;
+            CART_COUNT++;
+        }
+        if(FAM_BUY_QTY_4 > 0){
+            std::cout << std::left << std::setw(44) << FAM_NAME_4 << std::setw(16) << FAM_BUY_QTY_4
+                      << std::setw(14) << ("P" + std::to_string(FAM_PRICE_4))
+                      << "P" << FAM_BUY_QTY_4 * FAM_PRICE_4 << std::endl;
+            CART_TOTAL += FAM_BUY_QTY_4 * FAM_PRICE_4;
+            CART_COUNT++;
+        }
+        if(FAM_BUY_QTY_5 > 0){
+            std::cout << std::left << std::setw(44) << FAM_NAME_5 << std::setw(16) << FAM_BUY_QTY_5
+                      << std::setw(14) << ("P" + std::to_string(FAM_PRICE_5))
+                      << "P" << FAM_BUY_QTY_5 * FAM_PRICE_5 << std::endl;
+            CART_TOTAL += FAM_BUY_QTY_5 * FAM_PRICE_5;
+            CART_COUNT++;
+        }
+        if(FAM_BUY_QTY_6 > 0){
+            std::cout << std::left << std::setw(44) << FAM_NAME_6 << std::setw(16) << FAM_BUY_QTY_6
+                      << std::setw(14) << ("P" + std::to_string(FAM_PRICE_6))
+                      << "P" << FAM_BUY_QTY_6 * FAM_PRICE_6 << std::endl;
+            CART_TOTAL += FAM_BUY_QTY_6 * FAM_PRICE_6;
+            CART_COUNT++;
+        }
+        if(SHB_BUY_QTY_1 > 0){
+            std::cout << std::left << std::setw(44) << SHB_NAME_1 << std::setw(16) << SHB_BUY_QTY_1
+                      << std::setw(14) << ("P" + std::to_string(SHB_PRICE_1))
+                      << "P" << SHB_BUY_QTY_1 * SHB_PRICE_1 << std::endl;
+            CART_TOTAL += SHB_BUY_QTY_1 * SHB_PRICE_1;
+            CART_COUNT++;
+        }
+        if(SHB_BUY_QTY_2 > 0){
+            std::cout << std::left << std::setw(44) << SHB_NAME_2 << std::setw(16) << SHB_BUY_QTY_2
+                      << std::setw(14) << ("P" + std::to_string(SHB_PRICE_2))
+                      << "P" << SHB_BUY_QTY_2 * SHB_PRICE_2 << std::endl;
+            CART_TOTAL += SHB_BUY_QTY_2 * SHB_PRICE_2;
+            CART_COUNT++;
+        }
+        if(SHB_BUY_QTY_3 > 0){
+            std::cout << std::left << std::setw(44) << SHB_NAME_3 << std::setw(16) << SHB_BUY_QTY_3
+                      << std::setw(14) << ("P" + std::to_string(SHB_PRICE_3))
+                      << "P" << SHB_BUY_QTY_3 * SHB_PRICE_3 << std::endl;
+            CART_TOTAL += SHB_BUY_QTY_3 * SHB_PRICE_3;
+            CART_COUNT++;
+        }
+        if(SHB_BUY_QTY_4 > 0){
+            std::cout << std::left << std::setw(44) << SHB_NAME_4 << std::setw(16) << SHB_BUY_QTY_4
+                      << std::setw(14) << ("P" + std::to_string(SHB_PRICE_4))
+                      << "P" << SHB_BUY_QTY_4 * SHB_PRICE_4 << std::endl;
+            CART_TOTAL += SHB_BUY_QTY_4 * SHB_PRICE_4;
+            CART_COUNT++;
+        }
+        if(SHB_BUY_QTY_5 > 0){
+            std::cout << std::left << std::setw(44) << SHB_NAME_5 << std::setw(16) << SHB_BUY_QTY_5
+                      << std::setw(14) << ("P" + std::to_string(SHB_PRICE_5))
+                      << "P" << SHB_BUY_QTY_5 * SHB_PRICE_5 << std::endl;
+            CART_TOTAL += SHB_BUY_QTY_5 * SHB_PRICE_5;
+            CART_COUNT++;
+        }
+        if(CSM_BUY_QTY_1 > 0){
+            std::cout << std::left << std::setw(44) << CSM_NAME_1 << std::setw(16) << CSM_BUY_QTY_1
+                      << std::setw(14) << ("P" + std::to_string(CSM_PRICE_1))
+                      << "P" << CSM_BUY_QTY_1 * CSM_PRICE_1 << std::endl;
+            CART_TOTAL += CSM_BUY_QTY_1 * CSM_PRICE_1;
+            CART_COUNT++;
+        }
+        if(CSM_BUY_QTY_2 > 0){
+            std::cout << std::left << std::setw(44) << CSM_NAME_2 << std::setw(16) << CSM_BUY_QTY_2
+                      << std::setw(14) << ("P" + std::to_string(CSM_PRICE_2))
+                      << "P" << CSM_BUY_QTY_2 * CSM_PRICE_2 << std::endl;
+            CART_TOTAL += CSM_BUY_QTY_2 * CSM_PRICE_2;
+            CART_COUNT++;
+        }
+        if(CSM_BUY_QTY_3 > 0){
+            std::cout << std::left << std::setw(44) << CSM_NAME_3 << std::setw(16) << CSM_BUY_QTY_3
+                      << std::setw(14) << ("P" + std::to_string(CSM_PRICE_3))
+                      << "P" << CSM_BUY_QTY_3 * CSM_PRICE_3 << std::endl;
+            CART_TOTAL += CSM_BUY_QTY_3 * CSM_PRICE_3;
+            CART_COUNT++;
+        }
+        if(CSM_BUY_QTY_4 > 0){
+            std::cout << std::left << std::setw(44) << CSM_NAME_4 << std::setw(16) << CSM_BUY_QTY_4
+                      << std::setw(14) << ("P" + std::to_string(CSM_PRICE_4))
+                      << "P" << CSM_BUY_QTY_4 * CSM_PRICE_4 << std::endl;
+            CART_TOTAL += CSM_BUY_QTY_4 * CSM_PRICE_4;
+            CART_COUNT++;
+        }
+        if(CSM_BUY_QTY_5 > 0){
+            std::cout << std::left << std::setw(44) << CSM_NAME_5 << std::setw(16) << CSM_BUY_QTY_5
+                      << std::setw(14) << ("P" + std::to_string(CSM_PRICE_5))
+                      << "P" << CSM_BUY_QTY_5 * CSM_PRICE_5 << std::endl;
+            CART_TOTAL += CSM_BUY_QTY_5 * CSM_PRICE_5;
+            CART_COUNT++;
+        }
+        if(WT_BUY_QTY_1 > 0){
+            std::cout << std::left << std::setw(44) << WT_NAME_1 << std::setw(16) << WT_BUY_QTY_1
+                      << std::setw(14) << ("P" + std::to_string(WT_PRICE_1))
+                      << "P" << WT_BUY_QTY_1 * WT_PRICE_1 << std::endl;
+            CART_TOTAL += WT_BUY_QTY_1 * WT_PRICE_1;
+            CART_COUNT++;
+        }
+        if(WT_BUY_QTY_2 > 0){
+            std::cout << std::left << std::setw(44) << WT_NAME_2 << std::setw(16) << WT_BUY_QTY_2
+                      << std::setw(14) << ("P" + std::to_string(WT_PRICE_2))
+                      << "P" << WT_BUY_QTY_2 * WT_PRICE_2 << std::endl;
+            CART_TOTAL += WT_BUY_QTY_2 * WT_PRICE_2;
+            CART_COUNT++;
+        }
+        if(WT_BUY_QTY_3 > 0){
+            std::cout << std::left << std::setw(44) << WT_NAME_3 << std::setw(16) << WT_BUY_QTY_3
+                      << std::setw(14) << ("P" + std::to_string(WT_PRICE_3))
+                      << "P" << WT_BUY_QTY_3 * WT_PRICE_3 << std::endl;
+            CART_TOTAL += WT_BUY_QTY_3 * WT_PRICE_3;
+            CART_COUNT++;
+        }
+        if(WT_BUY_QTY_4 > 0){
+            std::cout << std::left << std::setw(44) << WT_NAME_4 << std::setw(16) << WT_BUY_QTY_4
+                      << std::setw(14) << ("P" + std::to_string(WT_PRICE_4))
+                      << "P" << WT_BUY_QTY_4 * WT_PRICE_4 << std::endl;
+            CART_TOTAL += WT_BUY_QTY_4 * WT_PRICE_4;
+            CART_COUNT++;
+        }
+        if(WT_BUY_QTY_5 > 0){
+            std::cout << std::left << std::setw(44) << WT_NAME_5 << std::setw(16) << WT_BUY_QTY_5
+                      << std::setw(14) << ("P" + std::to_string(WT_PRICE_5))
+                      << "P" << WT_BUY_QTY_5 * WT_PRICE_5 << std::endl;
+            CART_TOTAL += WT_BUY_QTY_5 * WT_PRICE_5;
+            CART_COUNT++;
+        }
+        if(PN_BUY_QTY_1 > 0){
+            std::cout << std::left << std::setw(44) << PN_NAME_1 << std::setw(16) << PN_BUY_QTY_1
+                      << std::setw(14) << ("P" + std::to_string(PN_PRICE_1))
+                      << "P" << PN_BUY_QTY_1 * PN_PRICE_1 << std::endl;
+            CART_TOTAL += PN_BUY_QTY_1 * PN_PRICE_1;
+            CART_COUNT++;
+        }
+        if(PN_BUY_QTY_2 > 0){
+            std::cout << std::left << std::setw(44) << PN_NAME_2 << std::setw(16) << PN_BUY_QTY_2
+                      << std::setw(14) << ("P" + std::to_string(PN_PRICE_2))
+                      << "P" << PN_BUY_QTY_2 * PN_PRICE_2 << std::endl;
+            CART_TOTAL += PN_BUY_QTY_2 * PN_PRICE_2;
+            CART_COUNT++;
+        }
+        if(PN_BUY_QTY_3 > 0){
+            std::cout << std::left << std::setw(44) << PN_NAME_3 << std::setw(16) << PN_BUY_QTY_3
+                      << std::setw(14) << ("P" + std::to_string(PN_PRICE_3))
+                      << "P" << PN_BUY_QTY_3 * PN_PRICE_3 << std::endl;
+            CART_TOTAL += PN_BUY_QTY_3 * PN_PRICE_3;
+            CART_COUNT++;
+        }
+        if(PN_BUY_QTY_4 > 0){
+            std::cout << std::left << std::setw(44) << PN_NAME_4 << std::setw(16) << PN_BUY_QTY_4
+                      << std::setw(14) << ("P" + std::to_string(PN_PRICE_4))
+                      << "P" << PN_BUY_QTY_4 * PN_PRICE_4 << std::endl;
+            CART_TOTAL += PN_BUY_QTY_4 * PN_PRICE_4;
+            CART_COUNT++;
+        }
+        if(PN_BUY_QTY_5 > 0){
+            std::cout << std::left << std::setw(44) << PN_NAME_5 << std::setw(16) << PN_BUY_QTY_5
+                      << std::setw(14) << ("P" + std::to_string(PN_PRICE_5))
+                      << "P" << PN_BUY_QTY_5 * PN_PRICE_5 << std::endl;
+            CART_TOTAL += PN_BUY_QTY_5 * PN_PRICE_5;
+            CART_COUNT++;
+        }
+        if(AC_BUY_QTY_1 > 0){
+            std::cout << std::left << std::setw(44) << AC_NAME_1 << std::setw(16) << AC_BUY_QTY_1
+                      << std::setw(14) << ("P" + std::to_string(AC_PRICE_1))
+                      << "P" << AC_BUY_QTY_1 * AC_PRICE_1 << std::endl;
+            CART_TOTAL += AC_BUY_QTY_1 * AC_PRICE_1;
+            CART_COUNT++;
+        }
+        if(AC_BUY_QTY_2 > 0){
+            std::cout << std::left << std::setw(44) << AC_NAME_2 << std::setw(16) << AC_BUY_QTY_2
+                      << std::setw(14) << ("P" + std::to_string(AC_PRICE_2))
+                      << "P" << AC_BUY_QTY_2 * AC_PRICE_2 << std::endl;
+            CART_TOTAL += AC_BUY_QTY_2 * AC_PRICE_2;
+            CART_COUNT++;
+        }
+        if(AC_BUY_QTY_3 > 0){
+            std::cout << std::left << std::setw(44) << AC_NAME_3 << std::setw(16) << AC_BUY_QTY_3
+                      << std::setw(14) << ("P" + std::to_string(AC_PRICE_3))
+                      << "P" << AC_BUY_QTY_3 * AC_PRICE_3 << std::endl;
+            CART_TOTAL += AC_BUY_QTY_3 * AC_PRICE_3;
+            CART_COUNT++;
+        }
+        if(AC_BUY_QTY_4 > 0){
+            std::cout << std::left << std::setw(44) << AC_NAME_4 << std::setw(16) << AC_BUY_QTY_4
+                      << std::setw(14) << ("P" + std::to_string(AC_PRICE_4))
+                      << "P" << AC_BUY_QTY_4 * AC_PRICE_4 << std::endl;
+            CART_TOTAL += AC_BUY_QTY_4 * AC_PRICE_4;
+            CART_COUNT++;
+        }
+        if(AC_BUY_QTY_5 > 0){
+            std::cout << std::left << std::setw(44) << AC_NAME_5 << std::setw(16) << AC_BUY_QTY_5
+                      << std::setw(14) << ("P" + std::to_string(AC_PRICE_5))
+                      << "P" << AC_BUY_QTY_5 * AC_PRICE_5 << std::endl;
+            CART_TOTAL += AC_BUY_QTY_5 * AC_PRICE_5;
+            CART_COUNT++;
+        }
+        if(BDI_BUY_QTY_1 > 0){
+            std::cout << std::left << std::setw(44) << BDI_NAME_1 << std::setw(16) << BDI_BUY_QTY_1
+                      << std::setw(14) << ("P" + std::to_string(BDI_PRICE_1))
+                      << "P" << BDI_BUY_QTY_1 * BDI_PRICE_1 << std::endl;
+            CART_TOTAL += BDI_BUY_QTY_1 * BDI_PRICE_1;
+            CART_COUNT++;
+        }
+        if(BDI_BUY_QTY_2 > 0){
+            std::cout << std::left << std::setw(44) << BDI_NAME_2 << std::setw(16) << BDI_BUY_QTY_2
+                      << std::setw(14) << ("P" + std::to_string(BDI_PRICE_2))
+                      << "P" << BDI_BUY_QTY_2 * BDI_PRICE_2 << std::endl;
+            CART_TOTAL += BDI_BUY_QTY_2 * BDI_PRICE_2;
+            CART_COUNT++;
+        }
+        if(BDI_BUY_QTY_3 > 0){
+            std::cout << std::left << std::setw(44) << BDI_NAME_3 << std::setw(16) << BDI_BUY_QTY_3
+                      << std::setw(14) << ("P" + std::to_string(BDI_PRICE_3))
+                      << "P" << BDI_BUY_QTY_3 * BDI_PRICE_3 << std::endl;
+            CART_TOTAL += BDI_BUY_QTY_3 * BDI_PRICE_3;
+            CART_COUNT++;
+        }
+        if(BDI_BUY_QTY_4 > 0){
+            std::cout << std::left << std::setw(44) << BDI_NAME_4 << std::setw(16) << BDI_BUY_QTY_4
+                      << std::setw(14) << ("P" + std::to_string(BDI_PRICE_4))
+                      << "P" << BDI_BUY_QTY_4 * BDI_PRICE_4 << std::endl;
+            CART_TOTAL += BDI_BUY_QTY_4 * BDI_PRICE_4;
+            CART_COUNT++;
+        }
+        if(BDI_BUY_QTY_5 > 0){
+            std::cout << std::left << std::setw(44) << BDI_NAME_5 << std::setw(16) << BDI_BUY_QTY_5
+                      << std::setw(14) << ("P" + std::to_string(BDI_PRICE_5))
+                      << "P" << BDI_BUY_QTY_5 * BDI_PRICE_5 << std::endl;
+            CART_TOTAL += BDI_BUY_QTY_5 * BDI_PRICE_5;
+            CART_COUNT++;
+        }
+
+        std::cout << std::endl;
+        std::cout << "                                                              ------------------------------" << std::endl;
+        std::cout << "                                                              TOTAL PRICE" << std::endl;
+        std::cout << "                                                              ------------------------------" << std::endl;
+        std::cout << "                                                              P" << CART_TOTAL << std::endl;
+        std::cout << std::endl;
+
+        if(CART_COUNT == 0){
+            std::cout << "Your cart is empty! Add some items first." << std::endl;
+            system("pause");
+            goto main_menu;
+        }
+
+        if(IS_CHECKOUT == 0){
+            std::cout << "Press 1 for main menu: " << std::endl;
+            std::cout << "Press 2 to checkout!" << std::endl;
+            std::cout << "Enter your choice: ";
+            std::cin >> CART_RETURN;
+
+            if(CART_RETURN == 2){
+                IS_CHECKOUT = 1;
+                goto view_cart;
+            }
+            goto main_menu;
+        }
+
+        // ---------- CHECKOUT ----------
+        payment_input:
+        std::cout << "Total amount to pay: P" << CART_TOTAL << std::endl;
+        std::cout << "Enter your payment (0 to cancel): P";
+        std::cin >> PAYMENT;
+
+        if(PAYMENT == 0){
+            goto main_menu;
+        }
+        if(PAYMENT < CART_TOTAL){
+            std::cout << "Not enough! You still need P" << CART_TOTAL - PAYMENT << " more." << std::endl;
+            std::cout << std::endl;
+            goto payment_input;
+        }
+
+        CHANGE_AMOUNT = PAYMENT - CART_TOTAL;
+
+        // take the purchased copies out of stock and empty the cart
+        FL_STOCK_1 -= FL_BUY_QTY_1; FL_BUY_QTY_1 = 0;
+        FL_STOCK_2 -= FL_BUY_QTY_2; FL_BUY_QTY_2 = 0;
+        FL_STOCK_3 -= FL_BUY_QTY_3; FL_BUY_QTY_3 = 0;
+        FL_STOCK_4 -= FL_BUY_QTY_4; FL_BUY_QTY_4 = 0;
+        FL_STOCK_5 -= FL_BUY_QTY_5; FL_BUY_QTY_5 = 0;
+        FL_STOCK_6 -= FL_BUY_QTY_6; FL_BUY_QTY_6 = 0;
+        FL_STOCK_7 -= FL_BUY_QTY_7; FL_BUY_QTY_7 = 0;
+        FL_STOCK_8 -= FL_BUY_QTY_8; FL_BUY_QTY_8 = 0;
+        FL_STOCK_9 -= FL_BUY_QTY_9; FL_BUY_QTY_9 = 0;
+        CLF_STOCK_1 -= CLF_BUY_QTY_1; CLF_BUY_QTY_1 = 0;
+        CLF_STOCK_2 -= CLF_BUY_QTY_2; CLF_BUY_QTY_2 = 0;
+        CLF_STOCK_3 -= CLF_BUY_QTY_3; CLF_BUY_QTY_3 = 0;
+        CLF_STOCK_4 -= CLF_BUY_QTY_4; CLF_BUY_QTY_4 = 0;
+        CLF_STOCK_5 -= CLF_BUY_QTY_5; CLF_BUY_QTY_5 = 0;
+        FAM_STOCK_1 -= FAM_BUY_QTY_1; FAM_BUY_QTY_1 = 0;
+        FAM_STOCK_2 -= FAM_BUY_QTY_2; FAM_BUY_QTY_2 = 0;
+        FAM_STOCK_3 -= FAM_BUY_QTY_3; FAM_BUY_QTY_3 = 0;
+        FAM_STOCK_4 -= FAM_BUY_QTY_4; FAM_BUY_QTY_4 = 0;
+        FAM_STOCK_5 -= FAM_BUY_QTY_5; FAM_BUY_QTY_5 = 0;
+        FAM_STOCK_6 -= FAM_BUY_QTY_6; FAM_BUY_QTY_6 = 0;
+        SHB_STOCK_1 -= SHB_BUY_QTY_1; SHB_BUY_QTY_1 = 0;
+        SHB_STOCK_2 -= SHB_BUY_QTY_2; SHB_BUY_QTY_2 = 0;
+        SHB_STOCK_3 -= SHB_BUY_QTY_3; SHB_BUY_QTY_3 = 0;
+        SHB_STOCK_4 -= SHB_BUY_QTY_4; SHB_BUY_QTY_4 = 0;
+        SHB_STOCK_5 -= SHB_BUY_QTY_5; SHB_BUY_QTY_5 = 0;
+        CSM_STOCK_1 -= CSM_BUY_QTY_1; CSM_BUY_QTY_1 = 0;
+        CSM_STOCK_2 -= CSM_BUY_QTY_2; CSM_BUY_QTY_2 = 0;
+        CSM_STOCK_3 -= CSM_BUY_QTY_3; CSM_BUY_QTY_3 = 0;
+        CSM_STOCK_4 -= CSM_BUY_QTY_4; CSM_BUY_QTY_4 = 0;
+        CSM_STOCK_5 -= CSM_BUY_QTY_5; CSM_BUY_QTY_5 = 0;
+        WT_STOCK_1 -= WT_BUY_QTY_1; WT_BUY_QTY_1 = 0;
+        WT_STOCK_2 -= WT_BUY_QTY_2; WT_BUY_QTY_2 = 0;
+        WT_STOCK_3 -= WT_BUY_QTY_3; WT_BUY_QTY_3 = 0;
+        WT_STOCK_4 -= WT_BUY_QTY_4; WT_BUY_QTY_4 = 0;
+        WT_STOCK_5 -= WT_BUY_QTY_5; WT_BUY_QTY_5 = 0;
+        PN_STOCK_1 -= PN_BUY_QTY_1; PN_BUY_QTY_1 = 0;
+        PN_STOCK_2 -= PN_BUY_QTY_2; PN_BUY_QTY_2 = 0;
+        PN_STOCK_3 -= PN_BUY_QTY_3; PN_BUY_QTY_3 = 0;
+        PN_STOCK_4 -= PN_BUY_QTY_4; PN_BUY_QTY_4 = 0;
+        PN_STOCK_5 -= PN_BUY_QTY_5; PN_BUY_QTY_5 = 0;
+        AC_STOCK_1 -= AC_BUY_QTY_1; AC_BUY_QTY_1 = 0;
+        AC_STOCK_2 -= AC_BUY_QTY_2; AC_BUY_QTY_2 = 0;
+        AC_STOCK_3 -= AC_BUY_QTY_3; AC_BUY_QTY_3 = 0;
+        AC_STOCK_4 -= AC_BUY_QTY_4; AC_BUY_QTY_4 = 0;
+        AC_STOCK_5 -= AC_BUY_QTY_5; AC_BUY_QTY_5 = 0;
+        BDI_STOCK_1 -= BDI_BUY_QTY_1; BDI_BUY_QTY_1 = 0;
+        BDI_STOCK_2 -= BDI_BUY_QTY_2; BDI_BUY_QTY_2 = 0;
+        BDI_STOCK_3 -= BDI_BUY_QTY_3; BDI_BUY_QTY_3 = 0;
+        BDI_STOCK_4 -= BDI_BUY_QTY_4; BDI_BUY_QTY_4 = 0;
+        BDI_STOCK_5 -= BDI_BUY_QTY_5; BDI_BUY_QTY_5 = 0;
+
+        CLEAR_SCREEN;
+        std::cout << "=============== RECEIPT ===============" << std::endl;
+        std::cout << "Total   : P" << CART_TOTAL << std::endl;
+        std::cout << "Payment : P" << PAYMENT << std::endl;
+        std::cout << "Change  : P" << CHANGE_AMOUNT << std::endl;
+        std::cout << "=======================================" << std::endl;
+        std::cout << "Thank you for shopping with us!" << std::endl;
+        system("pause");
+        goto main_menu;
         break;
         case 4:
-
+        IS_CHECKOUT = 1;
+        goto view_cart;
         break;
         case 5:
-
+        CLEAR_SCREEN;
+        std::cout << "Thank you for visiting! Goodbye!" << std::endl;
+        return 0;
         break;
         default:
-
+        std::cout << "Invalid option! Please choose 1 to 5." << std::endl;
+        system("pause");
         break;
     }
+
+    goto main_menu;
 }
