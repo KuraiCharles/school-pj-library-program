@@ -4,7 +4,10 @@ int main(){
 
     int OPTION_MENU,
         GENRE_OPTION,
-        SUPPLY_OPTION;
+        GENRE_RETURN,
+        SUPPLY_OPTION,
+        BOOK_CHOICE,
+        ADD_TO_CART_RETURN_CHOICE;
 
     // Price of each book (pesos)
     // Filipino Literature (FL)
@@ -52,7 +55,94 @@ int main(){
     // Bags and Desk Items (BDI)
     int BDI_STOCK_1 = 20, BDI_STOCK_2 = 20, BDI_STOCK_3 = 20, BDI_STOCK_4 = 20, BDI_STOCK_5 = 20;
 
-    menu:
+    // Quantity to buy of each book (starts at 0)
+    // Filipino Literature (FL)
+    int FL_BUY_QTY_1 = 0, FL_BUY_QTY_2 = 0, FL_BUY_QTY_3 = 0, FL_BUY_QTY_4 = 0, FL_BUY_QTY_5 = 0, FL_BUY_QTY_6 = 0;
+    int FL_BUY_QTY_7 = 0, FL_BUY_QTY_8 = 0, FL_BUY_QTY_9 = 0;
+    // Classic and Literary Fiction (CLF)
+    int CLF_BUY_QTY_1 = 0, CLF_BUY_QTY_2 = 0, CLF_BUY_QTY_3 = 0, CLF_BUY_QTY_4 = 0, CLF_BUY_QTY_5 = 0;
+    // Fantasy, Adventure and Mystery (FAM)
+    int FAM_BUY_QTY_1 = 0, FAM_BUY_QTY_2 = 0, FAM_BUY_QTY_3 = 0, FAM_BUY_QTY_4 = 0, FAM_BUY_QTY_5 = 0, FAM_BUY_QTY_6 = 0;
+    // Self-Help and Business (SHB)
+    int SHB_BUY_QTY_1 = 0, SHB_BUY_QTY_2 = 0, SHB_BUY_QTY_3 = 0, SHB_BUY_QTY_4 = 0, SHB_BUY_QTY_5 = 0;
+    // Computer Science and Math (CSM)
+    int CSM_BUY_QTY_1 = 0, CSM_BUY_QTY_2 = 0, CSM_BUY_QTY_3 = 0, CSM_BUY_QTY_4 = 0, CSM_BUY_QTY_5 = 0;
+
+    // Quantity to buy of each school supply (starts at 0)
+    // Writing Tools (WT)
+    int WT_BUY_QTY_1 = 0, WT_BUY_QTY_2 = 0, WT_BUY_QTY_3 = 0, WT_BUY_QTY_4 = 0, WT_BUY_QTY_5 = 0;
+    // Paper and Notebooks (PN)
+    int PN_BUY_QTY_1 = 0, PN_BUY_QTY_2 = 0, PN_BUY_QTY_3 = 0, PN_BUY_QTY_4 = 0, PN_BUY_QTY_5 = 0;
+    // Art and Craft (AC)
+    int AC_BUY_QTY_1 = 0, AC_BUY_QTY_2 = 0, AC_BUY_QTY_3 = 0, AC_BUY_QTY_4 = 0, AC_BUY_QTY_5 = 0;
+    // Bags and Desk Items (BDI)
+    int BDI_BUY_QTY_1 = 0, BDI_BUY_QTY_2 = 0, BDI_BUY_QTY_3 = 0, BDI_BUY_QTY_4 = 0, BDI_BUY_QTY_5 = 0;
+
+    // Name of each book
+    // Filipino Literature (FL)
+    std::string FL_NAME_1 = "Noli Me Tangere";
+    std::string FL_NAME_2 = "El Filibusterismo";
+    std::string FL_NAME_3 = "Florante at Laura";
+    std::string FL_NAME_4 = "Ibong Adarna";
+    std::string FL_NAME_5 = "Dekada '70";
+    std::string FL_NAME_6 = "Gapo";
+    std::string FL_NAME_7 = "Banaag at Sikat";
+    std::string FL_NAME_8 = "Mga Ibong Mandaragit";
+    std::string FL_NAME_9 = "Ilustrado";
+    // Classic and Literary Fiction (CLF)
+    std::string CLF_NAME_1 = "To Kill a Mockingbird";
+    std::string CLF_NAME_2 = "1984";
+    std::string CLF_NAME_3 = "The Great Gatsby";
+    std::string CLF_NAME_4 = "Pride and Prejudice";
+    std::string CLF_NAME_5 = "Animal Farm";
+    // Fantasy, Adventure and Mystery (FAM)
+    std::string FAM_NAME_1 = "Harry Potter and the Sorcerer's Stone";
+    std::string FAM_NAME_2 = "The Hobbit";
+    std::string FAM_NAME_3 = "The Hunger Games";
+    std::string FAM_NAME_4 = "The Alchemist";
+    std::string FAM_NAME_5 = "The Little Prince";
+    std::string FAM_NAME_6 = "Smaller and Smaller Circles";
+    // Self-Help and Business (SHB)
+    std::string SHB_NAME_1 = "Atomic Habits";
+    std::string SHB_NAME_2 = "Rich Dad Poor Dad";
+    std::string SHB_NAME_3 = "The 7 Habits of Highly Effective People";
+    std::string SHB_NAME_4 = "How to Win Friends and Influence People";
+    std::string SHB_NAME_5 = "Think and Grow Rich";
+    // Computer Science and Math (CSM)
+    std::string CSM_NAME_1 = "The C++ Programming Language";
+    std::string CSM_NAME_2 = "C++ Primer";
+    std::string CSM_NAME_3 = "Clean Code";
+    std::string CSM_NAME_4 = "Introduction to Algorithms";
+    std::string CSM_NAME_5 = "Discrete Mathematics and Its Applications";
+ 
+    // Name of each school supply
+    // Writing Tools (WT)
+    std::string WT_NAME_1 = "Ballpoint Pen (Pack of 5)";
+    std::string WT_NAME_2 = "Pencil No. 2 (Box of 12)";
+    std::string WT_NAME_3 = "Highlighter Set (4 colors)";
+    std::string WT_NAME_4 = "Permanent Marker (Black)";
+    std::string WT_NAME_5 = "Eraser and Sharpener Set";
+    // Paper and Notebooks (PN)
+    std::string PN_NAME_1 = "Spiral Notebook (80 leaves)";
+    std::string PN_NAME_2 = "Composition Notebook";
+    std::string PN_NAME_3 = "Yellow Pad Paper (Pad of 80)";
+    std::string PN_NAME_4 = "Bond Paper A4 (Ream of 500)";
+    std::string PN_NAME_5 = "Sticky Notes (Pack of 6)";
+    // Art and Craft (AC)
+    std::string AC_NAME_1 = "Crayons (Box of 24)";
+    std::string AC_NAME_2 = "Colored Pencils (Set of 12)";
+    std::string AC_NAME_3 = "Watercolor Set (12 colors)";
+    std::string AC_NAME_4 = "Scissors (Safety Type)";
+    std::string AC_NAME_5 = "Glue Stick (Pack of 3)";
+    // Bags and Desk Items (BDI)
+    std::string BDI_NAME_1 = "School Backpack";
+    std::string BDI_NAME_2 = "Pencil Case";
+    std::string BDI_NAME_3 = "Ruler (30 cm)";
+    std::string BDI_NAME_4 = "Scientific Calculator";
+    std::string BDI_NAME_5 = "Stapler with Staples";
+    
+    system("cls");
+    main_menu:
 
     std::cout << "▄▄▄▄ ▄▄▄▄ ▄▄▄▄▄ ▄▄▄▄ ▄▄ ▄ ▄ ▄▄  ▄▄▄ ▄▄▄▄      ▄▄   ▄▄ ▄▄▄▄ ▄▄▄▄ ▄▄▄▄ ▄▄▄▄ ▄▄ ▄" << std::endl;
     std::cout << "██ █ ██ █ ██    ██ ▀ ██ █ █ ██ ██▀  ██ ▀      ██   ██ ██ █ ██ █ ██ █ ██ █ ██ █" << std::endl;
@@ -65,21 +155,21 @@ int main(){
     std::cout << std::endl;
     std::cout << std::endl;
 
-    std::cout << "    ___________________________________   ___________________________________" << std::endl;
-    std::cout << ".-/|                                   \\ /                                   |\\-." << std::endl;
-    std::cout << "||||                                    |  1. Books Menu                     ||||" << std::endl;
-    std::cout << "||||                                    |  2. Supply Menu                    ||||" << std::endl;
-    std::cout << "||||             MAIN MENU              |  3. View Cart                      ||||" << std::endl;
-    std::cout << "||||                                    |  4. Checkout                       ||||" << std::endl;
-    std::cout << "||||                                    |  5. Exit                           ||||" << std::endl;
-    std::cout << "||||                                    |                                    ||||" << std::endl;
-    std::cout << "||||             --==*==--              |              --==*==--             ||||" << std::endl;
-    std::cout << "||||                                    |                                    ||||" << std::endl;
-    std::cout << "||||                                    |                                    ||||" << std::endl;
-    std::cout << "||||                                    |                                    ||||" << std::endl;
-    std::cout << "||||___________________________________ | ___________________________________||||" << std::endl;
-    std::cout << "||/====================================\\|/====================================\\||" << std::endl;
-    std::cout << "`-------------------------------------~___~------------------------------------''" << std::endl;
+    std::cout << " __________________   __________________" << std::endl;
+    std::cout << ".-/|                  \\ /                  |\\-." << std::endl;
+    std::cout << "||||                   |  1. Books Menu    ||||" << std::endl;
+    std::cout << "||||                   |  2. Supply Menu   ||||" << std::endl;
+    std::cout << "||||    MAIN MENU      |  3. View Cart     ||||" << std::endl;
+    std::cout << "||||                   |  4. Checkout      ||||" << std::endl;
+    std::cout << "||||                   |  5. Exit          ||||" << std::endl;
+    std::cout << "||||                   |                   ||||" << std::endl;
+    std::cout << "||||    --==*==--      |     --==*==--     ||||" << std::endl;
+    std::cout << "||||                   |                   ||||" << std::endl;
+    std::cout << "||||                   |                   ||||" << std::endl;
+    std::cout << "||||                   |                   ||||" << std::endl;
+    std::cout << "||||__________________ | __________________||||" << std::endl;
+    std::cout << "||/===================\\|/===================\\||" << std::endl;
+    std::cout << "`--------------------~___~-------------------''" << std::endl;
 
     std::cout << std::endl;
 
@@ -88,10 +178,11 @@ int main(){
 
     switch(OPTION_MENU){
         case 1:
-            system("cls");
+            genre_menu:
+
             std::cout << std::endl;
 
-            std::cout << "   ___________________________________   ___________________________________" << std::endl;
+            std::cout << " ___________________________________   ___________________________________" << std::endl;
             std::cout << ".-/|                                   \\ /                                   |\\-." << std::endl;
             std::cout << "||||                                    |  1. Filipino Literature            ||||" << std::endl;
             std::cout << "||||                                    |  2. Classic and Literary Fiction   ||||" << std::endl;
@@ -194,6 +285,83 @@ int main(){
             std::cout << "|       |   Philippine history and secrets." << std::endl;
             std::cout << "'-------'   Qty: " << FL_STOCK_9 << "   Price: P" << FL_PRICE_9 << std::endl;
             std::cout << std::endl;
+
+            std::cout << "Press 0 to go back in genre menu: ";
+            std::cin >> GENRE_RETURN;
+
+            if(GENRE_RETURN == 0){
+                goto genre_menu;
+            }
+
+            std::cout << std::endl;
+            std::cout << std::endl;
+            std::cout << "Add to cart!" << std::endl;
+            std::cout << "Enter the book number:";
+            std::cin >> BOOK_CHOICE;
+
+            std::cout << std::endl;
+            switch(BOOK_CHOICE){
+                case 1:
+                    redo_quantity_input:
+
+                    std::cout << "You picked " << FL_NAME_1 << "!" << std::endl;
+                    
+                    std::cout << std::endl;
+
+                    std::cout << "Enter the quantity: ";
+                    std::cin >> FL_BUY_QTY_1;
+
+                    if(FL_BUY_QTY_1 > FL_STOCK_1){
+                        system("cls");
+                        std::cout << "Out of Stock!" << std::endl;
+                        std::cout << "We have only " << FL_STOCK_1 << " stock left!" << std::endl;
+                        std::cout << "Press any key to redo the quantity to buy!";
+
+                        system("pause");
+
+                        goto redo_quantity_input;
+                    }
+                    system("cls");
+                    std::cout << FL_BUY_QTY_1 << " pieces of "<< FL_NAME_1 <<" is added to cart successfully!" << std::endl;
+                    system("pause");
+                    system("cls");
+
+                    std::cout << "Press 1 to go back in main menu or press 2 to go back in genre menu!" << std::endl;
+                    std::cin >> ADD_TO_CART_RETURN_CHOICE;
+
+                    if(ADD_TO_CART_RETURN_CHOICE == 1){
+                        goto main_menu;
+                    }
+                    else if(ADD_TO_CART_RETURN_CHOICE == 2){
+                        goto genre_menu;
+                    }
+
+                break;
+                case 2:
+
+                break;
+                case 3:
+
+                break;
+                case 4:
+
+                break;
+                case 5:
+
+                break;
+                case 6:
+
+                break;
+                case 7:
+
+                break;
+                case 8:
+
+                break;
+                case 9:
+
+                break;
+            }
             break;
             case 2:
             std::cout << "--- CLASSIC AND LITERARY FICTION ---" << std::endl;
@@ -392,7 +560,6 @@ int main(){
             std::cout << std::endl;
             break;
             default:
-            goto menu;
             break;
             }
         break;
