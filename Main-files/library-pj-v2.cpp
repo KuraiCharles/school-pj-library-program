@@ -180,6 +180,7 @@ int main(){
 
     switch(OPTION_MENU){
         case 1:
+            system("cls");
             genre_menu:
 
             std::cout << std::endl;
@@ -205,8 +206,7 @@ int main(){
             std::cout << "Enter your choice: ";
             std::cin >> GENRE_OPTION;
 
-            std::cout << std::endl;
-            std::cout << std::endl;
+            system("cls");
 
             switch (GENRE_OPTION){
             case 1:
