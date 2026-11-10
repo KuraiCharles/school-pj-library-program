@@ -17,6 +17,7 @@ int main(){
     int CUR_IS_BOOK = 1, PRINT_RETURN = 1;
     std::string CUR_NAME;
 
+    // Price of each book (pesos)
     // Filipino Literature (FL)
     int FL_PRICE_1 = 250, FL_PRICE_2 = 250, FL_PRICE_3 = 150, FL_PRICE_4 = 150, FL_PRICE_5 = 320, FL_PRICE_6 = 350, FL_PRICE_7 = 300, FL_PRICE_8 = 350, FL_PRICE_9 = 450;
     // Classic and Literary Fiction (CLF)
@@ -90,7 +91,7 @@ int main(){
     std::string Contact_number;
     std::string Address, Full_name;
     double Total_payment, Discount_amount = 0, Final_total = 0, Change = 0;
-    double DISCOUNT = 0.10;
+    double DISCOUNT = 10;
 
     // Name of each book
     // Filipino Literature (FL)
@@ -256,15 +257,28 @@ main_menu:
     std::cout << std::endl;
     std::cout << "Enter your option: ";
     std::cin >> OPTION_MENU;
-    if (OPTION_MENU == 1) goto genre_menu;
-    if (OPTION_MENU == 2) goto supply_menu;
-    if (OPTION_MENU == 3) goto Cart;
-    if (OPTION_MENU == 4) goto check_out;
-    if (OPTION_MENU == 5) goto exit_program;
-    std::cout << std::endl;
-    std::cout << "Invalid number! Please type one of the numbers shown in the menu." << std::endl;
-    system("pause");
-    goto main_menu;
+    switch (OPTION_MENU){
+        case 1:
+            goto genre_menu;
+        break;
+        case 2:
+            goto supply_menu;
+        break;
+        case 3:
+            goto Cart;
+        break;
+        case 4:
+            goto check_out;
+        break;
+        case 5:
+            goto exit_program;
+        break;
+        default:
+            system("cls");
+            std::cout << "Invalid number! Please type one of the numbers shown in the menu." << std::endl;
+            system("pause");
+            goto main_menu;
+    }
 
 genre_menu:
     system("cls");
@@ -287,16 +301,31 @@ genre_menu:
     std::cout << std::endl;
     std::cout << "Enter your choice: ";
     std::cin >> GENRE_OPTION;
-    if (GENRE_OPTION == 1) goto fl_list;
-    if (GENRE_OPTION == 2) goto clf_list;
-    if (GENRE_OPTION == 3) goto fam_list;
-    if (GENRE_OPTION == 4) goto shb_list;
-    if (GENRE_OPTION == 5) goto csm_list;
-    if (GENRE_OPTION == 6) goto main_menu;
-    std::cout << std::endl;
-    std::cout << "Invalid number! Please type one of the numbers shown in the menu." << std::endl;
-    system("pause");
-    goto genre_menu;
+    switch (GENRE_OPTION){
+        case 1:
+            goto fl_list;
+        break;
+        case 2:
+            goto clf_list;
+        break;
+        case 3:
+            goto fam_list;
+        break;
+        case 4:
+            goto shb_list;
+        break;
+        case 5:
+            goto csm_list;
+        break;
+        case 6:
+            goto main_menu;
+        break;
+        default:
+            system("cls");
+            std::cout << "Invalid number! Please type one of the numbers shown in the menu." << std::endl;
+            system("pause");
+            goto genre_menu;
+    }
 
 supply_menu:
     system("cls");
@@ -318,15 +347,28 @@ supply_menu:
     std::cout << std::endl;
     std::cout << "Enter your choice: ";
     std::cin >> SUPPLY_OPTION;
-    if (SUPPLY_OPTION == 1) goto wt_list;
-    if (SUPPLY_OPTION == 2) goto pn_list;
-    if (SUPPLY_OPTION == 3) goto ac_list;
-    if (SUPPLY_OPTION == 4) goto bdi_list;
-    if (SUPPLY_OPTION == 5) goto main_menu;
-    std::cout << std::endl;
-    std::cout << "Invalid number! Please type one of the numbers shown in the menu." << std::endl;
-    system("pause");
-    goto supply_menu;
+    switch (SUPPLY_OPTION){
+        case 1:
+            goto wt_list;
+        break;
+        case 2:
+            goto pn_list;
+        break;
+        case 3:
+            goto ac_list;
+        break;
+        case 4:
+            goto bdi_list;
+        break;
+        case 5:
+            goto main_menu;
+        break;
+        default:
+            system("cls");
+            std::cout << "Invalid number! Please type one of the numbers shown in the menu." << std::endl;
+            system("pause");
+            goto supply_menu;
+    }
 
 fl_list:
     system("cls");
@@ -1543,7 +1585,7 @@ checkout_items_done:
     std::cout << std::endl;
     std::cout << "-----------------------------------------------------------------------------------------" << std::endl;
     std::cout << "\t\t\t\t\t\t\t\tTOTAL PRICE: " << "P" << Over_all << std::endl;
-    std::cout << "\t\t\t\t\t\t\tPress Enter to Pay" << std::endl;
+    std::cout << "\t\t\t\t\t\t\t  Press Enter to Pay" << std::endl;
     std::cout << "=========================================================================================" << std::endl;
     std::cout << std::endl;
     system("pause");
@@ -1559,7 +1601,7 @@ checkout_items_done:
     std::cin >> RIDDLE_ANSWER;
     if (RIDDLE_ANSWER == 243){
         Discount_won = 1;
-        Discount_amount = Over_all * DISCOUNT;
+        Discount_amount = Over_all * DISCOUNT / 100;
         Final_total = Over_all - Discount_amount;
         std::cout << "YOU WON A 10% DISCOUNT!!" << std::endl;
     }
