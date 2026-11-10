@@ -17,7 +17,6 @@ int main(){
     int CUR_IS_BOOK = 1, PRINT_RETURN = 1;
     std::string CUR_NAME;
 
-    // Price of each book (pesos)
     // Filipino Literature (FL)
     int FL_PRICE_1 = 250, FL_PRICE_2 = 250, FL_PRICE_3 = 150, FL_PRICE_4 = 150, FL_PRICE_5 = 320, FL_PRICE_6 = 350, FL_PRICE_7 = 300, FL_PRICE_8 = 350, FL_PRICE_9 = 450;
     // Classic and Literary Fiction (CLF)
